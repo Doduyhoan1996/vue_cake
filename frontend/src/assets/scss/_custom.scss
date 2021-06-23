@@ -1,0 +1,41 @@
+a {
+    cursor: pointer;
+}
+
+.el-promt-error {
+    .el-message-box__title {
+        color: $red
+    }
+}
+
+.el-dialog-body-gray {
+    .el-dialog__body {
+        background-color: #f3f3f4;
+        padding: 20px;
+    }
+    .el-dialog__footer {
+        padding: 15px 20px;
+    }
+}
+
+.is-invalid {
+    input, textarea {
+        border: 1px solid red;
+    }
+}
+.is-invalid.el-input__inner {
+    border: 1px solid red !important;
+}
+
+label.required::after {
+    content: " (*)";
+    color: #ED5565;
+}
+
+.el-select {
+    width: 100%;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
