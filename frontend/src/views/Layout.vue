@@ -182,7 +182,7 @@
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" @click="editUser($store.state.app_user.user.id)">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
@@ -286,6 +286,98 @@
                 </div>
             </el-dialog>
         </form>
+
+        <!-- Dialog - User -->
+        <form role="form" @submit.prevent="submitEditProfile">
+            <el-dialog title="Thông tin tài khoản"
+                custom-class="el-dialog-body-gray" 
+                :visible.sync="dialogVisible.profile" 
+                width="500px"
+            >
+                <div v-loading="loadingState.userForm">
+
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label class="required">Họ</label>
+                            <div>
+                                <el-input size="small" 
+                                    v-model="form.profile.first_name"
+                                    v-validate="'required'"
+                                    data-vv-name="first_name" data-vv-as="Họ"
+                                    :class="{'is-invalid': errors.has('first_name')}"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="required">Tên</label>
+                            <div>
+                                <el-input size="small" 
+                                    v-model="form.profile.last_name"
+                                    v-validate="'required'"
+                                    data-vv-name="last_name" data-vv-as="Tên"
+                                    :class="{'is-invalid': errors.has('last_name')}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label class="required">Giới tính</label>
+                            <div>
+                                <el-radio v-model="form.profile.gender" :label="1">Nam</el-radio>
+                                <el-radio v-model="form.profile.gender" :label="2">Nữ</el-radio>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="required">Ngày sinh</label>
+                            <div>
+                                <el-date-picker 
+                                    v-model="form.profile.birthday"
+                                    v-validate="'required'" 
+                                    data-vv-name="birthday"
+                                    data-vv-as="Ngày sinh"  
+                                    type="date"
+                                    size="small" 
+                                    placeholder="Lựa chọn"
+                                    format="dd/MM/yyyy"
+                                    value-format="yyyy-MM-dd"
+                                    :class="{'is-invalid': errors.has('birthday')}"
+                                    :picker-options="pickerOptions"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label>Điện thoại</label>
+                            <div>
+                                <el-input size="small" 
+                                    v-model="form.profile.phone"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Nơi ở hiện nay</label>
+                            <div>
+                                <el-input size="small" 
+                                    v-model="form.profile.address"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div slot="footer" class="dialog-footer">  
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon-split" :disabled="loadingState.userForm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-save"></i>
+                        </span>
+                        <span class="text">Lưu</span>
+                    </button>
+                </div>
+            </el-dialog>
+        </form>
+
     </div>
 </template>
 
@@ -295,6 +387,7 @@ import acl_config from '@/config/acl'
 import API_SETTING from '@/utils/api/setting'
 import API_USER from '@/utils/api/user'
 import Avatar from 'vue-avatar'
+import moment from 'moment'
 
 export default {
     name: 'pcm-layout-view',
@@ -303,18 +396,34 @@ export default {
     },
     data() {
         return {
+            pickerOptions: {
+                disabledDate(time) {
+                return time.getTime() > Date.now();
+                }
+            },
             activeMenu: [],
             loadingState: {
-                changePasswordForm: false
+                changePasswordForm: false,
+                userForm: false
             },
             dialogVisible: {
-                changePassword: false
+                changePassword: false,
+                profile: false
             },
             form: {
                 user: {
                     old_password: '',
                     password: '',
                     re_password: ''
+                }, 
+                profile: {
+                    id: '',
+                    first_name: '',
+                    last_name: '',
+                    birthday: '',
+                    gender: '',
+                    phone: '',
+                    address: '',
                 }
             }
         }
@@ -399,7 +508,52 @@ export default {
                     data: []
                 });
             })
-        }
+        },
+        editUser(id) {
+            let self = this
+            
+            self.loadingState.userForm = true
+            API_USER.get(self.$axios, {id: id}, function(data){
+                self.loadingState.userForm = false
+                if (data.status) {
+                    self.form.profile.id = data.data.id;
+                    self.form.profile.first_name = data.data.first_name;
+                    self.form.profile.last_name = data.data.last_name;
+                    self.form.profile.gender = data.data.gender;
+                    self.form.profile.phone = data.data.phone;
+                    self.form.profile.address = data.data.address;
+                    self.form.profile.birthday = moment(data.data.birthday).format('YYYY-MM-DD');
+
+                    self.dialogVisible.profile = true;
+                } else {
+                    self.showMessage('error', 'Không tìm thấy !')
+                }
+            }, function (error) {
+                console.log(error);
+            });
+        },
+        submitEditProfile() {
+            let self = this
+            self.$validator.validateAll().then((result) => {
+                if (result) {
+                    self.loadingState.userForm = true
+                    API_USER.update(self.$axios, self.form.profile, function (data) {
+                        self.loadingState.userForm = false
+                        if (data.status) {
+                            self.$store.state.app_user.user.full_name = self.form.profile.first_name + ' ' +self.form.profile.last_name;
+                            self.showMessage('success', 'Chỉnh sửa profile thành công!')
+                            self.dialogVisible.profile = false
+                        } else {
+                            if (data.error_code == 103) {
+                                self.showInValidMessage(data.data)
+                            }
+                        }
+                    }, function (error) {
+                        console.log(error);
+                    });
+                }
+            })
+        },
     }
 }
 </script>

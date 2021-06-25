@@ -380,6 +380,10 @@ export default {
                         API_USER.update(self.$axios, self.form.user, function (data) {
                             self.loadingState.userForm = false
                             if (data.status) {
+                                if(self.form.user.id == self.$store.state.app_user.user.id ) {
+                                    self.$store.state.app_user.user = self.form.user;
+                                    self.$store.state.app_user.user.full_name = self.form.user.first_name + ' ' +self.form.user.last_name;
+                                }
                                 self.showMessage('success', 'Chỉnh sửa nhân sự thành công!')
                                 self.resetFormUser()
                                 self.dialogVisible.user = false
