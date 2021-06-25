@@ -41,12 +41,6 @@
                     </button>
                 </li>
 
-                <li class="nav-item" :class="{active: _.indexOf(activeMenu, 'calendar') > -1}">
-                    <button class="nav-link btn btn-link" @click="$router.push({name: 'calendar'})">
-                        <i class="far fa-calendar-alt"></i>
-                        <span>Calendar</span>
-                    </button>
-                </li>
                 <li class="nav-item" :class="{active: _.indexOf(activeMenu, 'users') > -1}" v-if="$acl.check('isAdmin')">
                     <button class="nav-link btn btn-link" @click="$router.push({name: 'users'})">
                         <i class="fas fa-fw fa-users"></i>

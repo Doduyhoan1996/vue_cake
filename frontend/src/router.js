@@ -53,14 +53,6 @@ let router = new Router({
 						rule: 'isAdmin'
 					}
         },
-        {
-          path: 'calendar',
-          name: 'calendar',
-          component: () => import('./views/calendar/Index.vue'),
-          meta: {
-						rule: 'isAdmin'
-					}
-        }
       ]
     }
   ]
