@@ -335,14 +335,7 @@ export default {
                                     this.loadData()
                                     },
                                     500 
-                                ),
-        '$store.getters.CHANGE_PROFILE' : function() {
-            let self = this;
-            if(self.$store.getters.CHANGE_PROFILE) {
-                self.loadData();
-                self.$store.commit("SET_CHANGE_PROFILE", false);
-            }
-        }
+                                )
     },
     methods: {
         loadData() {
@@ -428,7 +421,7 @@ export default {
         },
         editUser(id) {
             let self = this
-            if (self.form.user.id == id && self.$store.state.app_user.user.id != id) {
+            if (self.form.user.id == id) {
                 return self.dialogVisible.user = true
             }
             self.resetFormUser()
