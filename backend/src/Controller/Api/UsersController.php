@@ -83,6 +83,9 @@ class UsersController extends ApiAppController
             return $this->responseData(['error_code' => 100]);
         }
         $dataGet = $this->request->getQuery();
+        
+        $limit      = isset( $dataGet["limit"] ) ? intval( $dataGet["limit"] ) : User::USER_LIMIT_DEFAULT;
+        $page       = isset( $dataGet["page"] ) ? intval( $dataGet["page"] ) : 1;
         $conditions = [];
 
         if (isset($dataGet['type']) && $dataGet['type']) {
@@ -102,7 +105,7 @@ class UsersController extends ApiAppController
                 "Users.email LIKE"                                    => '%' . $dataGet['keyword'] . '%'
             ];
         }
-        $users['list'] = $this->Users->find()
+        $listUsers = $this->Users->find()
             ->select([
                 'Users.id',
                 'Users.first_name',
@@ -113,7 +116,15 @@ class UsersController extends ApiAppController
                 'total_project' => '(Select count(*) from project_members where user_id = Users.id)',
                 'Users.created'
             ])
-            ->where($conditions)->order(['Users.id' => 'DESC'])->toArray();
+            ->where($conditions)
+            ->order(['Users.id' => 'DESC'])
+            ->page( $page, $limit );
+
+        $users['pagination']['totalRecord'] = $listUsers->count();
+        $users['pagination']['pageSize'] = User::USER_LIMIT_DEFAULT;
+        $users['pagination']['page'] = $page;
+
+        $users['list'] = $listUsers->toArray();
 
         $count_hd = $this->Users->find()->where(['Users.status' => User::STATUS_NORMAL])->count();
         $count_ad = $this->Users->find()->where(['Users.role' => User::ROLE_ADMIN, 'Users.status' => User::STATUS_NORMAL])->count();

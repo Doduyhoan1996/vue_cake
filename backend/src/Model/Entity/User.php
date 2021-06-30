@@ -44,6 +44,8 @@ class User extends Entity
     const ROLE_HR = 2;
     const ROLE_USER = 9;
 
+    const USER_LIMIT_DEFAULT = 10;
+
     public static function generatePassword($plainPassword) {
         return md5(env('SECURITY_SALT', 'dev'). $plainPassword);
     }

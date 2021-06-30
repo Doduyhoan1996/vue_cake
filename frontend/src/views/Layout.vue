@@ -549,6 +549,13 @@ export default {
                             self.$store.state.app_user.user.full_name = self.form.profile.first_name + ' ' +self.form.profile.last_name;
                             self.showMessage('success', 'Chỉnh sửa profile thành công!')
                             self.dialogVisible.profile = false
+
+                            if(self.$route.name == 'users') {
+                                self.$store.dispatch('setFlagChange', true);
+                            } else {
+                                self.$store.dispatch('setFlagChange', false);
+                            }
+
                         } else {
                             if (data.error_code == 103) {
                                 self.showInValidMessage(data.data)
