@@ -10,34 +10,34 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mb-4 border-left-primary">
-                    <div class="card-body">
-                        <h6>Điều kiện lọc</h6>
-                        <div>
-                            <el-tabs v-model="form.filter.type" @tab-click="loadData()">
-                                <el-tab-pane name="active">
-                                    <span slot="label">Hoạt động <span class="badge btn-success  badge-counter">{{users.count.count_hd}}</span></span>
-                                </el-tab-pane>
-                                <el-tab-pane name="1">
-                                    <span slot="label">Quản trị <span class="badge btn-danger badge-counter">{{users.count.count_ad}}</span></span>
-                                </el-tab-pane>
-                                <el-tab-pane name="2">
-                                    <span slot="label">Hành chính <span class="badge btn-primary badge-counter">{{users.count.count_hc}}</span></span>
-                                </el-tab-pane>
-                                <el-tab-pane name="9">
-                                    <span slot="label">Thành viên <span class="badge btn-warning badge-counter">{{users.count.count_tv}}</span></span>
-                                </el-tab-pane>
-                                <el-tab-pane name="block">
-                                    <span slot="label">Khóa <span class="badge badge-secondary badge-counter">{{users.count.count_k}}</span></span>
-                                </el-tab-pane>
-                            </el-tabs>
-                        </div>
-                        <div>
-                            <el-input placeholder="Nhập tên hoặc Email" v-model="form.filter.keyword" clearable>
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
+                        <div class="card-body">
+                            <h6>Điều kiện lọc</h6>
+                            <div>
+                                <el-tabs v-model="form.filter.type" @tab-click="loadData()">
+                                    <el-tab-pane name="active">
+                                        <span slot="label">Hoạt động <span class="badge btn-success  badge-counter">{{users.count.count_hd}}</span></span>
+                                    </el-tab-pane>
+                                    <el-tab-pane name="1">
+                                        <span slot="label">Quản trị <span class="badge btn-danger badge-counter">{{users.count.count_ad}}</span></span>
+                                    </el-tab-pane>
+                                    <el-tab-pane name="2">
+                                        <span slot="label">Hành chính <span class="badge btn-primary badge-counter">{{users.count.count_hc}}</span></span>
+                                    </el-tab-pane>
+                                    <el-tab-pane name="9">
+                                        <span slot="label">Thành viên <span class="badge btn-warning badge-counter">{{users.count.count_tv}}</span></span>
+                                    </el-tab-pane>
+                                    <el-tab-pane name="block">
+                                        <span slot="label">Khóa <span class="badge badge-secondary badge-counter">{{users.count.count_k}}</span></span>
+                                    </el-tab-pane>
+                                </el-tabs>
+                            </div>
+                            <div>
+                                <el-input placeholder="Nhập tên hoặc Email" v-model="form.filter.keyword" clearable>
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
             <div class="row">
@@ -85,9 +85,25 @@
                                 </el-table-column>
                             </el-table>
                         </div>
+
+                        <div class="pt-4 pb-4">
+                            <div class="col-xl-12">
+                                <el-pagination
+                                    class="text-center"
+                                    background
+                                    layout="total, prev, pager, next, jumper"
+                                    :total="users.pagination.totalRecord"
+                                    :page-size="users.pagination.pageSize"
+                                    @current-change="pageChange"
+                                    >
+                                </el-pagination>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
+            
         </div>
 
         <!-- Dialog - User -->
@@ -321,7 +337,12 @@ export default {
             },
             users: {
                 count: [],
-                list: []
+                list: [],
+                pagination: {
+                    totalRecord: 1,
+                    page: 1,
+                    pageSize: 1,
+                }
             }
         }
     },
@@ -346,7 +367,17 @@ export default {
     },
     methods: {
         loadData() {
-            let self = this
+            let self = this;
+            self.pageChange(self.users.pagination.page)
+        },
+        pageChange(page) {
+            let self = this;
+            let query = {
+                params: self.form.filter,
+            };
+
+            query.params.page = page;
+
             self.loadingState.userList = true
             API_USER.getList(self.$axios, self.form.filter, function(data) {
                 self.loadingState.userList = false
