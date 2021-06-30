@@ -545,9 +545,9 @@ export default {
                             self.dialogVisible.profile = false
 
                             if(self.$route.name == 'users') {
-                                self.$store.commit("SET_CHANGE_PROFILE", true);
+                                self.$store.dispatch('setFlagChange', true);
                             } else {
-                                self.$store.commit("SET_CHANGE_PROFILE", false);
+                                self.$store.dispatch('setFlagChange', false);
                             }
 
                         } else {

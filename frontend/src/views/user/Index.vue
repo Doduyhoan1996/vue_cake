@@ -336,11 +336,11 @@ export default {
                                     },
                                     500 
                                 ),
-        '$store.getters.CHANGE_PROFILE' : function() {
+        '$store.state.flag_change' : function() {
             let self = this;
-            if(self.$store.getters.CHANGE_PROFILE) {
+            if(self.$store.state.flag_change) {
                 self.loadData();
-                self.$store.commit("SET_CHANGE_PROFILE", false);
+                self.$store.dispatch('setFlagChange', false);
             }
         }
     },
