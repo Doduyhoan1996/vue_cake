@@ -248,7 +248,15 @@ export default {
   created() {
         let self = this;
         this.$emit('activeMenu', 'calendar');
-        self.loadData()
+        self.loadData();
+        setInterval(() => {
+            API_CALENDAR.getList(self.$axios, self.form.filter, function(data) {
+                if (data.status) {
+                    self.calendar = data.data
+                }
+            }, function(error) {
+            })
+        }, 5000);
     },
   methods: {
       loadData(){

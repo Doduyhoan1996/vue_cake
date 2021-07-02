@@ -22,7 +22,7 @@
                                         <div class="col-md-5 form-group">
                                             <h6 class="font-weight-bold">Teams</h6>
                                             <div class=" m-auto">
-                                                <el-checkbox-group v-model="checkListTeams">
+                                                <el-checkbox-group v-model="form.filter.checkListTeams">
                                                     <el-checkbox label="Android"></el-checkbox>
                                                     <el-checkbox label="IOS"></el-checkbox>
                                                     <el-checkbox label="PHP"></el-checkbox>
@@ -250,7 +250,6 @@ export default {
     },
     data() {
         return {
-            checkListTeams: ['Android', 'IOS' , 'PHP'],
             dialogVisible: {
                 report: false
             },
@@ -273,6 +272,7 @@ export default {
                         moment().format('YYYY-MM-01 h:mm:ss'),
                         moment().format('YYYY-MM-DD h:mm:ss')
                     ],
+                    checkListTeams: ['Android', 'IOS' , 'PHP'],
                 },
                 report:{
                     id: '',
