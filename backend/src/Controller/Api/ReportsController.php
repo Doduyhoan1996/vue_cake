@@ -24,14 +24,6 @@ class ReportsController extends ApiAppController
         }
         $dataGet = $this->request->getQuery();
         $conditions = [];
-        $conditionsOr = [];
-        // if (isset($dataGet['keyword']) && $dataGet['keyword']) {
-        //     $keyword = preg_replace('/\s+/', '', $dataGet['keyword']);
-        //     $conditionsOr["OR"] = [
-        //         "CONCAT(Users.first_name, ' ', Users.last_name) LIKE" => '%' . $keyword . '%',
-        //         "Users.email LIKE"                                    => '%' . $keyword . '%'
-        //     ];
-        // }
         if (isset($dataGet['keyword']) && $dataGet['keyword'] ) {
             $conditions["OR"] = [
                 "CONCAT(Users.first_name, ' ', Users.last_name) LIKE" => '%' . $dataGet['keyword'] . '%',
@@ -65,7 +57,6 @@ class ReportsController extends ApiAppController
             ])
             ->contain(['Users'])
             ->where($conditions)
-            ->where($conditionsOr)
             ->order(['Reports.date_report' => 'ASC'])
             ->toArray();
 

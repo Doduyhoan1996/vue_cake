@@ -292,15 +292,14 @@ export default {
         let self = this;
         this.$emit('activeMenu', 'report.index');
         self.loadData();
-        // setInterval(() => {
-        //     API_REPORT.getList(self.$axios, self.form.filter, function(data) {
-        //         if (data.status) {
-        //             self.reportList = data.data
-        //         } 
-        //     }, function(error) {
-
-        //     })
-        // }, 5000);
+        setInterval(() => {
+            API_REPORT.getList(self.$axios, self.form.filter, function(data) {
+                if (data.status) {
+                    self.reportList = data.data
+                } 
+            }, function(error) {
+            })
+        }, 5000);
     },
     methods: {
         loadData() {
