@@ -47,6 +47,12 @@
                         <span>Calendar</span>
                     </button>
                 </li>
+                <li class="nav-item" :class="{active: _.indexOf(activeMenu, 'report') > -1}">
+                    <button class="nav-link btn btn-link" @click="$router.push({name: 'report'})">
+                        <i class="fas fa-fw fa-bullhorn"></i>
+                        <span> Báo cáo</span>
+                    </button>
+                </li>
                 <li class="nav-item" :class="{active: _.indexOf(activeMenu, 'users') > -1}" v-if="$acl.check('isAdmin')">
                     <button class="nav-link btn btn-link" @click="$router.push({name: 'users'})">
                         <i class="fas fa-fw fa-users"></i>

@@ -60,7 +60,15 @@ let router = new Router({
           meta: {
 						rule: 'isAdmin'
 					}
-        }
+        },
+        {
+          path: 'report',
+          name: 'report',
+          component: () => import('./views/report/Index.vue'),
+          meta: {
+						rule: 'isLogged'
+					}
+        },
       ]
     }
   ]
