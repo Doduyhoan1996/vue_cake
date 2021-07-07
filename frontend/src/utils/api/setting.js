@@ -1,5 +1,6 @@
 const GET_LIST = '/api/settings/autoload'
 const GET_BY_KEY = '/api/settings/get-by-key'
+const UPDATE_SETTING = '/api/settings/update'
 
 let services = {
     getList(axios, success, fail) {
@@ -26,7 +27,18 @@ let services = {
             .catch((error) => {
                 fail(error)
             })
-    }
+    },
+
+    update(axios, form, success, fail) {
+        axios.post(UPDATE_SETTING, form)
+            .then((response) => {
+                let data = response.data
+                success(data)
+            })
+            .catch((error) => {
+                fail(error)
+            })
+    },
 }
 
 export default services

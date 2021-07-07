@@ -69,6 +69,14 @@ let router = new Router({
 						rule: 'isLogged'
 					}
         },
+        {
+          path: 'setting',
+          name: 'setting',
+          component: () => import('./views/setting/Index.vue'),
+          meta: {
+						rule: 'isAdmin'
+					}
+        },
       ]
     }
   ]
